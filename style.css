@@ -1,0 +1,129 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: #16213e;
+  border-radius: 20px;
+  padding: 48px 40px;
+  text-align: center;
+  width: 340px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  color: #e94560;
+}
+
+.clock {
+  font-size: 3.2rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #ffffff;
+  margin-bottom: 36px;
+  font-variant-numeric: tabular-nums;
+}
+
+.alarm-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #aaa;
+  text-align: left;
+}
+
+input[type="time"] {
+  background: #0f3460;
+  border: 2px solid #e94560;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.6rem;
+  padding: 10px 16px;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="time"]:focus {
+  border-color: #fff;
+}
+
+.btn {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-set {
+  background: #e94560;
+  color: #fff;
+}
+
+.btn-set:hover:not(:disabled) {
+  background: #c73652;
+}
+
+.btn-cancel {
+  background: #444;
+  color: #eee;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #555;
+}
+
+.status {
+  margin-top: 24px;
+  font-size: 0.9rem;
+  color: #aaa;
+  min-height: 1.4em;
+  transition: color 0.3s;
+}
+
+.status.active {
+  color: #4ecca3;
+}
+
+.status.ringing {
+  color: #e94560;
+  font-weight: 700;
+  animation: pulse 0.6s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 1; }
+  to { opacity: 0.4; }
+}
