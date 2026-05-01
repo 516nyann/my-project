@@ -99,7 +99,7 @@ def generate_summary(articles: list[dict]) -> None:
     print("\n" + "=" * 60, flush=True)
 
     with client.messages.stream(
-        model="claude-opus-4-7",
+        model="claude-haiku-4-5",
         max_tokens=2048,
         system=[
             {
