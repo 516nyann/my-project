@@ -2,7 +2,8 @@
 """Fetch NHK RSS feeds and generate a concise daily Japanese news summary via Claude."""
 
 import sys
-import feedparser
+import urllib.request
+import xml.etree.ElementTree as ET
 import anthropic
 from datetime import datetime
 
@@ -28,29 +29,45 @@ NHKニュースの記事一覧を受け取り、今日の重要なニュース�
 """
 
 
+def fetch_rss(url: str) -> list[tuple[str, str]]:
+    """Return list of (title, description) from an RSS feed URL."""
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        root = ET.fromstring(resp.read())
+
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    items = root.findall(".//item") or root.findall(".//atom:entry", ns)
+    results = []
+    for item in items:
+        title = (item.findtext("title") or item.findtext("atom:title", namespaces=ns) or "").strip()
+        desc = (item.findtext("description") or item.findtext("atom:summary", namespaces=ns) or "").strip()
+        if title:
+            results.append((title, desc))
+    return results
+
+
 def fetch_articles() -> list[dict]:
     articles = []
     seen = set()
 
     for src in NEWS_SOURCES:
         try:
-            feed = feedparser.parse(src["url"])
+            entries = fetch_rss(src["url"])
         except Exception as e:
             print(f"⚠ {src['name']} の取得失敗: {e}", file=sys.stderr)
             continue
 
         count = 0
-        for entry in feed.entries:
+        for title, summary in entries:
             if count >= MAX_PER_SOURCE:
                 break
-            title = entry.get("title", "").strip()
-            if not title or title in seen:
+            if title in seen:
                 continue
             seen.add(title)
             articles.append({
                 "category": src["name"],
                 "title": title,
-                "summary": entry.get("summary", "").strip(),
+                "summary": summary,
             })
             count += 1
 
